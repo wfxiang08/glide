@@ -28,6 +28,7 @@ public class OkHttpUrlLoader implements ModelLoader<GlideUrl, InputStream> {
   @Override
   public LoadData<InputStream> buildLoadData(GlideUrl model, int width, int height,
       Options options) {
+    // 核心是: OkHttpStreamFetcher
     return new LoadData<>(model, new OkHttpStreamFetcher(client, model));
   }
 
@@ -35,6 +36,7 @@ public class OkHttpUrlLoader implements ModelLoader<GlideUrl, InputStream> {
    * The default factory for {@link OkHttpUrlLoader}s.
    */
   public static class Factory implements ModelLoaderFactory<GlideUrl, InputStream> {
+    // OKHttp3的Factory定义
     private static volatile Call.Factory internalClient;
     private Call.Factory client;
 
@@ -67,6 +69,7 @@ public class OkHttpUrlLoader implements ModelLoader<GlideUrl, InputStream> {
 
     @Override
     public ModelLoader<GlideUrl, InputStream> build(MultiModelLoaderFactory multiFactory) {
+      // 核心是大家共享client
       return new OkHttpUrlLoader(client);
     }
 

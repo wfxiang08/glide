@@ -84,6 +84,8 @@ import java.util.List;
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class Glide implements ComponentCallbacks2 {
+
+  // 作为单例，对外提供服务
   private static final String DEFAULT_DISK_CACHE_DIR = "image_manager_disk_cache";
   private static final String TAG = "Glide";
   private static volatile Glide glide;
@@ -146,9 +148,14 @@ public class Glide implements ComponentCallbacks2 {
       synchronized (Glide.class) {
         if (glide == null) {
           Context applicationContext = context.getApplicationContext();
+
+          // 读取各种GlideModule的定义
+          // AndroidManifest.xml中的配置
           List<GlideModule> modules = new ManifestParser(applicationContext).parse();
 
           GlideBuilder builder = new GlideBuilder(applicationContext);
+
+          // 注意: module的两个方法
           for (GlideModule module : modules) {
             module.applyOptions(applicationContext, builder);
           }

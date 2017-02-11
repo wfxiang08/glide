@@ -24,6 +24,8 @@ public class OkHttpGlideModule implements GlideModule {
 
   @Override
   public void registerComponents(Context context, Registry registry) {
+    // 如何注册模块呢?
+    // 这个Module该如何定义呢?
     registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
   }
 }

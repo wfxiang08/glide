@@ -26,12 +26,19 @@ public final class ManifestParser {
     }
     List<GlideModule> modules = new ArrayList<>();
     try {
+
+      // 获取AppInfo
       ApplicationInfo appInfo = context.getPackageManager()
           .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+
+      // 获取MetaData
       if (appInfo.metaData == null) {
         return modules;
       }
+
+      // 同一个Meta可以有多个信息?
       for (String key : appInfo.metaData.keySet()) {
+        // 通过Value来聚类
         if (GLIDE_MODULE_VALUE.equals(appInfo.metaData.get(key))) {
           modules.add(parseModule(key));
           if (Log.isLoggable(TAG, Log.DEBUG)) {

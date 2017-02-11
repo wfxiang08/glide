@@ -33,14 +33,19 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
 
   @Override
   public void loadData(Priority priority, final DataCallback<? super InputStream> callback) {
+    // 加载数据，回调
     Request.Builder requestBuilder = new Request.Builder().url(url.toStringUrl());
+
     for (Map.Entry<String, String> headerEntry : url.getHeaders().entrySet()) {
       String key = headerEntry.getKey();
       requestBuilder.addHeader(key, headerEntry.getValue());
     }
     Request request = requestBuilder.build();
 
+    // 通过Client执行Request
     call = client.newCall(request);
+    // 回调
+    // OKHttp Callback --> Glide Callback
     call.enqueue(new okhttp3.Callback() {
       @Override
       public void onFailure(Call call, IOException e) {
@@ -54,6 +59,7 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
       public void onResponse(Call call, Response response) throws IOException {
         responseBody = response.body();
         if (response.isSuccessful()) {
+          // Response的封装
           long contentLength = responseBody.contentLength();
           stream = ContentLengthInputStream.obtain(responseBody.byteStream(), contentLength);
         } else if (Log.isLoggable(TAG, Log.DEBUG)) {
